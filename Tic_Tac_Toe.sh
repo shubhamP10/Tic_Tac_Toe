@@ -138,6 +138,30 @@ function blockUser()
 	elif [[ ${BOARD[2]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]]; 
 	then
 		BOARD[6]=$ComputerSymbol;
+	elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[2]} == $playerSymbol ]]; 
+	then
+		BOARD[1]=$ComputerSymbol;
+	elif [[ ${BOARD[3]} == $playerSymbol && ${BOARD[5]} == $playerSymbol ]]; 
+	then
+		BOARD[4]=$ComputerSymbol;
+	elif [[ ${BOARD[6]} == $playerSymbol && ${BOARD[8]} == $playerSymbol ]]; 
+	then
+		BOARD[7]=$ComputerSymbol;
+	elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[6]} == $playerSymbol ]]; 
+	then
+		BOARD[3]=$ComputerSymbol;
+	elif [[ ${BOARD[1]} == $playerSymbol && ${BOARD[7]} == $playerSymbol ]]; 
+	then
+		BOARD[4]=$ComputerSymbol;
+	elif [[ ${BOARD[2]} == $playerSymbol && ${BOARD[8]} == $playerSymbol ]]; 
+	then
+		BOARD[5]=$ComputerSymbol;
+	elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[8]} == $playerSymbol ]]; 
+	then
+		BOARD[4]=$ComputerSymbol;
+	elif [[ ${BOARD[2]} == $playerSymbol && ${BOARD[6]} == $playerSymbol ]]; 
+	then
+		BOARD[4]=$ComputerSymbol;
 	else
 		makeFirstMove
 	fi
