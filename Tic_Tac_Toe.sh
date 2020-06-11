@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/bash -x
 echo "Welcome To Tic Tac Toe Simulation";
 echo "";
 
@@ -67,6 +67,8 @@ function playTurn()
 	if [[ $1 -eq 1 ]];
 	then
 		echo "Your Turn";
+
+		echo "Your Symbol is :"$playerSymbol;
 
 		read -p "Enter Cell Number to Mark yor Symbol: " choice;
 		if [[ $choice -eq 1 && ${BOARD[0]} -eq 1 ]]; 
@@ -164,7 +166,7 @@ function play()
 {
 	while [[ $i -eq 255 ]]; 
 	do
-		printBoard ${BOARD[@]};
+		# printBoard ${BOARD[@]};
 		if [[ $((PLAYER%2)) -eq 1 ]];
 		then
 			PLAYER=1;
@@ -177,9 +179,11 @@ function play()
 	done
 	if [[ $i -eq 1 ]]; 
 	then
+		printBoard ${BOARD[@]};
 		if [[ $PLAYER -eq 2 ]]; 
 		then
 			echo "Congrats!!!! You Won the Game";
+
 		else
 			echo "Computer Won";
 		fi
@@ -200,9 +204,11 @@ case $TOSS in
 		if [[ $OPTION -eq 1 ]]; 
 		then
 			playerSymbol=$SYMBOL2;
+			ComputerSymbol=$SYMBOL1;
 		elif [[ $OPTION -eq 2 ]]; 
 		then
 			playerSymbol=$SYMBOL1;
+			ComputerSymbol=$SYMBOL2;
 		fi
 		echo "Your Symbol is : "$playerSymbol;
 		PLAYER=1;
@@ -213,9 +219,11 @@ case $TOSS in
 		if [[ $OPTION -eq 1 ]]; 
 		then
 			ComputerSymbol=$SYMBOL2;
+			playerSymbol=$SYMBOL1;
 		elif [[ $OPTION -eq 2 ]]; 
 		then
 			ComputerSymbol=$SYMBOL1;
+			playerSymbol=$SYMBOL2;
 		fi
 		echo "Computer Symbol is : "$ComputerSymbol;
 		PLAYER=2;
