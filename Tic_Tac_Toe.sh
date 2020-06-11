@@ -8,7 +8,7 @@ SYMBOL1='X';
 SYMBOL2='O';
 
 # VARIABLES
-
+turnCount=0;
 i=255;
 choice=0;
 #ARRAY
@@ -30,28 +30,28 @@ function printBoard()
 
 function checkWin()
 {
-	if [[ ${BOARD[0]} -eq ${BOARD[1]} && ${BOARD[1]} -eq ${BOARD[2]} ]]; 
+	if [[ ${BOARD[0]} == ${BOARD[1]} && ${BOARD[1]} == ${BOARD[2]} ]]; 
 	then
 		return 1;
-	elif [[ ${BOARD[3]} -eq ${BOARD[4]} && ${BOARD[4]} -eq ${BOARD[5]} ]]; 
+	elif [[ ${BOARD[3]} == ${BOARD[4]} && ${BOARD[4]} == ${BOARD[5]} ]]; 
 	then
 		return 1;
-	elif [[ ${BOARD[6]} -eq ${BOARD[7]} && ${BOARD[7]} -eq ${BOARD[8]} ]]; 
+	elif [[ ${BOARD[6]} == ${BOARD[7]} && ${BOARD[7]} == ${BOARD[8]} ]]; 
 	then
 		return 1;
-	elif [[ ${BOARD[0]} -eq ${BOARD[3]} && ${BOARD[3]} -eq ${BOARD[6]} ]]; 
+	elif [[ ${BOARD[0]} == ${BOARD[3]} && ${BOARD[3]} == ${BOARD[6]} ]]; 
 	then
 		return 1;
-	elif [[ ${BOARD[1]} -eq ${BOARD[4]} && ${BOARD[4]} -eq ${BOARD[7]} ]]; 
+	elif [[ ${BOARD[1]} == ${BOARD[4]} && ${BOARD[4]} == ${BOARD[7]} ]]; 
 	then
 		return 1;
-	elif [[ ${BOARD[2]} -eq ${BOARD[5]} && ${BOARD[5]} -eq ${BOARD[8]} ]]; 
+	elif [[ ${BOARD[2]} == ${BOARD[5]} && ${BOARD[5]} == ${BOARD[8]} ]]; 
 	then
 		return 1;
-	elif [[ ${BOARD[0]} -eq ${BOARD[4]} && ${BOARD[4]} -eq ${BOARD[8]} ]]; 
+	elif [[ ${BOARD[0]} == ${BOARD[4]} && ${BOARD[4]} == ${BOARD[8]} ]]; 
 	then
 		return 1;
-	elif [[ ${BOARD[2]} -eq ${BOARD[4]} && ${BOARD[4]} -eq ${BOARD[6]} ]]; 
+	elif [[ ${BOARD[2]} == ${BOARD[4]} && ${BOARD[4]} == ${BOARD[6]} ]]; 
 	then
 		return 1;
 	elif [[ ${BOARD[0]} -ne 1 && ${BOARD[1]} -ne 2 && ${BOARD[2]} -ne 3 && ${BOARD[3]} -ne 4 && ${BOARD[4]} -ne 5 && ${BOARD[5]} -ne 6 && ${BOARD[6]} -ne 7 && ${BOARD[7]} -ne 8 && ${BOARD[8]} -ne 9 ]]; 
@@ -59,6 +59,87 @@ function checkWin()
 		return 0;
 	else
 		return -1;
+	fi
+}
+
+#Computer Will Make First Move
+function makeFirstMove()
+{
+	cchoice=$(((RANDOM%9)+1));
+	local placed=0;
+	while [[ $placed -eq 0 ]]; 
+			do
+				if [[ $cchoice -eq 1 && ${BOARD[0]} -eq 1 ]]; 
+				then
+					BOARD[0]=$ComputerSymbol;
+					placed=1;
+				elif [[ $cchoice -eq 2 && ${BOARD[1]} -eq 2 ]]; 
+				then
+					BOARD[1]=$ComputerSymbol;
+					placed=1;
+				elif [[ $cchoice -eq 3 && ${BOARD[2]} -eq 3 ]]; 
+				then
+					BOARD[2]=$ComputerSymbol;
+					placed=1;
+				elif [[ $cchoice -eq 4 && ${BOARD[3]} -eq 4 ]]; 
+				then
+					BOARD[3]=$ComputerSymbol;
+					placed=1;
+				elif [[ $cchoice -eq 5 && ${BOARD[4]} -eq 5 ]]; 
+				then
+					BOARD[4]=$ComputerSymbol;
+					placed=1;
+				elif [[ $cchoice -eq 6 && ${BOARD[5]} -eq 6 ]]; 
+				then
+					BOARD[5]=$ComputerSymbol;
+					placed=1;
+				elif [[ $cchoice -eq 7 && ${BOARD[6]} -eq 7 ]]; 
+				then
+					BOARD[6]=$ComputerSymbol;
+					placed=1;
+				elif [[ $cchoice -eq 8 && ${BOARD[7]} -eq 8 ]]; 
+				then
+					BOARD[7]=$ComputerSymbol;
+					placed=1;
+				elif [[ $cchoice -eq 9 && ${BOARD[8]} -eq 9 ]]; 
+				then
+					BOARD[8]=$ComputerSymbol;
+					placed=1;
+				else
+					cchoice=$(((RANDOM%9)+1));
+				fi
+			done
+}
+
+#Computer Will Block the user to win at its 2nd or 3rd turn
+function blockUser()
+{
+	if [[ ${BOARD[0]} == $playerSymbol && ${BOARD[1]} == $playerSymbol ]]; #if user marked 1 and 2    
+	then																   #then 3rd cell will blocked   
+		BOARD[2]=$ComputerSymbol;
+	elif [[ ${BOARD[3]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]]; 
+	then
+		BOARD[5]=$ComputerSymbol;
+	elif [[ ${BOARD[6]} == $playerSymbol && ${BOARD[7]} == $playerSymbol ]]; 
+	then
+		BOARD[8]=$ComputerSymbol;
+	elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[3]} == $playerSymbol ]]; 
+	then
+		BOARD[6]=$ComputerSymbol;
+	elif [[ ${BOARD[1]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]]; 
+	then
+		BOARD[7]=$ComputerSymbol;
+	elif [[ ${BOARD[2]} == $playerSymbol && ${BOARD[5]} == $playerSymbol ]]; 
+	then
+		BOARD[8]=$ComputerSymbol;
+	elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]]; 
+	then
+		BOARD[8]=$ComputerSymbol;
+	elif [[ ${BOARD[2]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]]; 
+	then
+		BOARD[6]=$ComputerSymbol;
+	else
+		makeFirstMove
 	fi
 }
 
@@ -71,31 +152,31 @@ function playTurn()
 		echo "Your Symbol is :"$playerSymbol;
 
 		read -p "Enter Cell Number to Mark yor Symbol: " choice;
-		if [[ $choice -eq 1 && ${BOARD[0]} -eq 1 ]]; 
+		if [[ $choice == 1 && ${BOARD[0]} == 1 ]]; 
 		then
 			BOARD[0]=$playerSymbol;
-		elif [[ $choice -eq 2 && ${BOARD[1]} -eq 2 ]]; 
+		elif [[ $choice == 2 && ${BOARD[1]} == 2 ]]; 
 		then
 			BOARD[1]=$playerSymbol;
-		elif [[ $choice -eq 3 && ${BOARD[2]} -eq 3 ]]; 
+		elif [[ $choice == 3 && ${BOARD[2]} == 3 ]]; 
 		then
 			BOARD[2]=$playerSymbol;
-		elif [[ $choice -eq 4 && ${BOARD[3]} -eq 4 ]]; 
+		elif [[ $choice == 4 && ${BOARD[3]} == 4 ]]; 
 		then
 			BOARD[3]=$playerSymbol;
-		elif [[ $choice -eq 5 && ${BOARD[4]} -eq 5 ]]; 
+		elif [[ $choice == 5 && ${BOARD[4]} == 5 ]]; 
 		then
 			BOARD[4]=$playerSymbol;
-		elif [[ $choice -eq 6 && ${BOARD[5]} -eq 6 ]]; 
+		elif [[ $choice == 6 && ${BOARD[5]} == 6 ]]; 
 		then
 			BOARD[5]=$playerSymbol;
-		elif [[ $choice -eq 7 && ${BOARD[6]} -eq 7 ]]; 
+		elif [[ $choice == 7 && ${BOARD[6]} == 7 ]]; 
 		then
 			BOARD[6]=$playerSymbol;
-		elif [[ $choice -eq 8 && ${BOARD[7]} -eq 8 ]]; 
+		elif [[ $choice == 8 && ${BOARD[7]} == 8 ]]; 
 		then
 			BOARD[7]=$playerSymbol;
-		elif [[ $choice -eq 9 && ${BOARD[8]} -eq 9 ]]; 
+		elif [[ $choice == 9 && ${BOARD[8]} == 9 ]]; 
 		then
 			BOARD[8]=$playerSymbol;
 		else
@@ -110,52 +191,16 @@ function playTurn()
 
 	elif [[ $1 -eq 2 ]]; 
 	then
+		turnCount=$((turnCount+1));
 		echo "Computer's Turn";
-		cchoice=$(((RANDOM%9)+1));
-		local placed=0;
-
-		while [[ $placed -eq 0 ]]; 
-		do
-			if [[ $cchoice -eq 1 && ${BOARD[0]} -eq 1 ]]; 
-			then
-				BOARD[0]=$ComputerSymbol;
-				placed=1;
-			elif [[ $cchoice -eq 2 && ${BOARD[1]} -eq 2 ]]; 
-			then
-				BOARD[1]=$ComputerSymbol;
-				placed=1;
-			elif [[ $cchoice -eq 3 && ${BOARD[2]} -eq 3 ]]; 
-			then
-				BOARD[2]=$ComputerSymbol;
-				placed=1;
-			elif [[ $cchoice -eq 4 && ${BOARD[3]} -eq 4 ]]; 
-			then
-				BOARD[3]=$ComputerSymbol;
-				placed=1;
-			elif [[ $cchoice -eq 5 && ${BOARD[4]} -eq 5 ]]; 
-			then
-				BOARD[4]=$ComputerSymbol;
-				placed=1;
-			elif [[ $cchoice -eq 6 && ${BOARD[5]} -eq 6 ]]; 
-			then
-				BOARD[5]=$ComputerSymbol;
-				placed=1;
-			elif [[ $cchoice -eq 7 && ${BOARD[6]} -eq 7 ]]; 
-			then
-				BOARD[6]=$ComputerSymbol;
-				placed=1;
-			elif [[ $cchoice -eq 8 && ${BOARD[7]} -eq 8 ]]; 
-			then
-				BOARD[7]=$ComputerSymbol;
-				placed=1;
-			elif [[ $cchoice -eq 9 && ${BOARD[8]} -eq 9 ]]; 
-			then
-				BOARD[8]=$ComputerSymbol;
-				placed=1;
-			else
-				cchoice=$(((RANDOM%9)+1));
-			fi
-		done
+		
+		if [[ $turnCount == 2 || $turnCount == 3 || $turnCount == 4 ]]; 
+		then
+			blockUser
+		else
+			makeFirstMove
+		fi
+		
 		checkWin
 		i=($?);
 		PLAYER=$((PLAYER+1));
@@ -211,6 +256,7 @@ case $TOSS in
 			ComputerSymbol=$SYMBOL2;
 		fi
 		echo "Your Symbol is : "$playerSymbol;
+		printBoard ${BOARD[@]};
 		PLAYER=1;
 		;;
 	1 )
