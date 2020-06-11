@@ -114,22 +114,22 @@ function makeFirstMove()
 #Computer Will Block the user to win at its 2nd or 3rd turn
 function blockUser()
 {
-	if [[ ${BOARD[0]} == $playerSymbol && ${BOARD[1]} == $playerSymbol ]]; #if user marked 1 and 2    
+	if [[ ${BOARD[0]} == $playerSymbol && ${BOARD[1]} == $playerSymbol || ${BOARD[0]} == $ComputerSymbol && ${BOARD[1]} == $ComputerSymbol ]]; #if user marked 1 and 2    
 	then																   #then 3rd cell will blocked   
 		BOARD[2]=$ComputerSymbol;
 	elif [[ ${BOARD[3]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]]; 
 	then
 		BOARD[5]=$ComputerSymbol;
-	elif [[ ${BOARD[6]} == $playerSymbol && ${BOARD[7]} == $playerSymbol ]]; 
+	elif [[ ${BOARD[6]} == $playerSymbol && ${BOARD[7]} == $playerSymbol || ${BOARD[6]} == $ComputerSymbol && ${BOARD[7]} == $ComputerSymbol ]]; 
 	then
 		BOARD[8]=$ComputerSymbol;
-	elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[3]} == $playerSymbol ]]; 
+	elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[3]} == $playerSymbol || ${BOARD[0]} == $ComputerSymbol && ${BOARD[3]} == $ComputerSymbol ]]; 
 	then
 		BOARD[6]=$ComputerSymbol;
 	elif [[ ${BOARD[1]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]]; 
 	then
 		BOARD[7]=$ComputerSymbol;
-	elif [[ ${BOARD[2]} == $playerSymbol && ${BOARD[5]} == $playerSymbol ]]; 
+	elif [[ ${BOARD[2]} == $playerSymbol && ${BOARD[5]} == $playerSymbol || ${BOARD[2]} == $ComputerSymbol && ${BOARD[5]} == $ComputerSymbol ]]; 
 	then
 		BOARD[8]=$ComputerSymbol;
 	elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]]; 
@@ -194,7 +194,7 @@ function playTurn()
 		turnCount=$((turnCount+1));
 		echo "Computer's Turn";
 		
-		if [[ $turnCount == 2 || $turnCount == 3 || $turnCount == 4 ]]; 
+		if [[ $turnCount == 2 || $turnCount == 3 || $turnCount == 4 ]]; #in 2nd or 3rd or 4th turn Computer will call blockuser function 
 		then
 			blockUser
 		else
