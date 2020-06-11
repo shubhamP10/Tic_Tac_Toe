@@ -223,7 +223,7 @@ function playTurn()
 		turnCount=$((turnCount+1));
 		echo "Computer's Turn";
 		
-		if [[ $turnCount == 2 || $turnCount == 3 || $turnCount == 4 ]]; #in 2nd or 3rd or 4th turn Computer will call blockuser function 
+		if [[ $turnCount == 2 || $turnCount == 3 || $turnCount == 4 || $turnCount == 5 ]]; #in 2nd or 3rd or 4th turn Computer will call blockuser function 
 		then
 			blockUser
 		else
@@ -307,4 +307,4 @@ case $TOSS in
 		PLAYER=2;
 		;;
 esac
-play
+play  #calling play function
