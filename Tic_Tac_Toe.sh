@@ -8,9 +8,8 @@ SYMBOL1='X';
 SYMBOL2='O';
 
 # VARIABLES
-playerSymbol='';
-ComputerSymbol='';
-i=-1;
+
+i=255;
 choice=0;
 #ARRAY
 declare -a BOARD;
@@ -68,6 +67,7 @@ function playTurn()
 	if [[ $1 -eq 1 ]];
 	then
 		echo "Your Turn";
+
 		read -p "Enter Cell Number to Mark yor Symbol: " choice;
 		if [[ $choice -eq 1 && ${BOARD[0]} -eq 1 ]]; 
 		then
@@ -102,20 +102,67 @@ function playTurn()
 
 		fi
 		checkWin
-		i=?;
+		i=($?);
 		PLAYER=$((PLAYER+1));
 
 
 	elif [[ $1 -eq 2 ]]; 
 	then
 		echo "Computer's Turn";
+		cchoice=$(((RANDOM%9)+1));
+		local placed=0;
+
+		while [[ $placed -eq 0 ]]; 
+		do
+			if [[ $cchoice -eq 1 && ${BOARD[0]} -eq 1 ]]; 
+			then
+				BOARD[0]=$ComputerSymbol;
+				placed=1;
+			elif [[ $cchoice -eq 2 && ${BOARD[1]} -eq 2 ]]; 
+			then
+				BOARD[1]=$ComputerSymbol;
+				placed=1;
+			elif [[ $cchoice -eq 3 && ${BOARD[2]} -eq 3 ]]; 
+			then
+				BOARD[2]=$ComputerSymbol;
+				placed=1;
+			elif [[ $cchoice -eq 4 && ${BOARD[3]} -eq 4 ]]; 
+			then
+				BOARD[3]=$ComputerSymbol;
+				placed=1;
+			elif [[ $cchoice -eq 5 && ${BOARD[4]} -eq 5 ]]; 
+			then
+				BOARD[4]=$ComputerSymbol;
+				placed=1;
+			elif [[ $cchoice -eq 6 && ${BOARD[5]} -eq 6 ]]; 
+			then
+				BOARD[5]=$ComputerSymbol;
+				placed=1;
+			elif [[ $cchoice -eq 7 && ${BOARD[6]} -eq 7 ]]; 
+			then
+				BOARD[6]=$ComputerSymbol;
+				placed=1;
+			elif [[ $cchoice -eq 8 && ${BOARD[7]} -eq 8 ]]; 
+			then
+				BOARD[7]=$ComputerSymbol;
+				placed=1;
+			elif [[ $cchoice -eq 9 && ${BOARD[8]} -eq 9 ]]; 
+			then
+				BOARD[8]=$ComputerSymbol;
+				placed=1;
+			else
+				cchoice=$(((RANDOM%9)+1));
+			fi
+		done
+		checkWin
+		i=($?);
 		PLAYER=$((PLAYER+1));
 	fi
 }
 
 function play()
 {
-	while [[ $i -eq -1 ]]; 
+	while [[ $i -eq 255 ]]; 
 	do
 		printBoard ${BOARD[@]};
 		if [[ $((PLAYER%2)) -eq 1 ]];
@@ -126,11 +173,16 @@ function play()
 		fi
 		playTurn $PLAYER;
 		printBoard ${BOARD[@]};
-		break;
+		# break;
 	done
 	if [[ $i -eq 1 ]]; 
 	then
-		echo "PLAYER $PLAYER Won";
+		if [[ $PLAYER -eq 2 ]]; 
+		then
+			echo "Congrats!!!! You Won the Game";
+		else
+			echo "Computer Won";
+		fi
 	else
 		echo "OOPS Game Draw";
 	fi
@@ -138,6 +190,8 @@ function play()
 
 TOSS=$((RANDOM%2));
 OPTION=0;
+playerSymbol='';
+ComputerSymbol='';
 case $TOSS in
 	0 )
 		echo "You Won the Toss !!! ";
