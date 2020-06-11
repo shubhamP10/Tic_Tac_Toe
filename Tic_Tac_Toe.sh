@@ -29,6 +29,40 @@ function printBoard()
 	
 }
 
+function checkWin()
+{
+	if [[ ${BOARD[0]} -eq ${BOARD[1]} && ${BOARD[1]} -eq ${BOARD[2]} ]]; 
+	then
+		return 1;
+	elif [[ ${BOARD[3]} -eq ${BOARD[4]} && ${BOARD[4]} -eq ${BOARD[5]} ]]; 
+	then
+		return 1;
+	elif [[ ${BOARD[6]} -eq ${BOARD[7]} && ${BOARD[7]} -eq ${BOARD[8]} ]]; 
+	then
+		return 1;
+	elif [[ ${BOARD[0]} -eq ${BOARD[3]} && ${BOARD[3]} -eq ${BOARD[6]} ]]; 
+	then
+		return 1;
+	elif [[ ${BOARD[1]} -eq ${BOARD[4]} && ${BOARD[4]} -eq ${BOARD[7]} ]]; 
+	then
+		return 1;
+	elif [[ ${BOARD[2]} -eq ${BOARD[5]} && ${BOARD[5]} -eq ${BOARD[8]} ]]; 
+	then
+		return 1;
+	elif [[ ${BOARD[0]} -eq ${BOARD[4]} && ${BOARD[4]} -eq ${BOARD[8]} ]]; 
+	then
+		return 1;
+	elif [[ ${BOARD[2]} -eq ${BOARD[4]} && ${BOARD[4]} -eq ${BOARD[6]} ]]; 
+	then
+		return 1;
+	elif [[ ${BOARD[0]} -ne 1 && ${BOARD[1]} -ne 2 && ${BOARD[2]} -ne 3 && ${BOARD[3]} -ne 4 && ${BOARD[4]} -ne 5 && ${BOARD[5]} -ne 6 && ${BOARD[6]} -ne 7 && ${BOARD[7]} -ne 8 && ${BOARD[8]} -ne 9 ]]; 
+	then
+		return 0;
+	else
+		return -1;
+	fi
+}
+
 function playTurn()
 {
 	if [[ $1 -eq 1 ]];
@@ -56,14 +90,22 @@ function playTurn()
 		elif [[ $choice -eq 7 && ${BOARD[6]} -eq 7 ]]; 
 		then
 			BOARD[6]=$playerSymbol;
-		elif [[ $choice -eq 8 && ${BOARD[7]} -eq 2 ]]; 
+		elif [[ $choice -eq 8 && ${BOARD[7]} -eq 8 ]]; 
 		then
 			BOARD[7]=$playerSymbol;
 		elif [[ $choice -eq 9 && ${BOARD[8]} -eq 9 ]]; 
 		then
 			BOARD[8]=$playerSymbol;
+		else
+			echo "Invalid Move";
+			PLAYER=$((PLAYER-1));
+
 		fi
+		checkWin
+		i=?;
 		PLAYER=$((PLAYER+1));
+
+
 	elif [[ $1 -eq 2 ]]; 
 	then
 		echo "Computer's Turn";
@@ -86,6 +128,12 @@ function play()
 		printBoard ${BOARD[@]};
 		break;
 	done
+	if [[ $i -eq 1 ]]; 
+	then
+		echo "PLAYER $PLAYER Won";
+	else
+		echo "OOPS Game Draw";
+	fi
 }
 
 TOSS=$((RANDOM%2));
