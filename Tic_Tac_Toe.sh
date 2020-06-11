@@ -15,6 +15,7 @@ choice=0;
 declare -a BOARD;
 BOARD=(1 2 3 4 5 6 7 8 9); 
 
+#this function will print the board after each turn
 function printBoard()
 {
 	b=("$@");
@@ -28,6 +29,10 @@ function printBoard()
 	
 }
 
+#this function will check for all winning Combinations
+# returns 1 if true
+# returns -1 if false
+# returns 0 if board is Full
 function checkWin()
 {
 	if [[ ${BOARD[0]} == ${BOARD[1]} && ${BOARD[1]} == ${BOARD[2]} ]]; 
@@ -56,9 +61,9 @@ function checkWin()
 		return 1;
 	elif [[ ${BOARD[0]} -ne 1 && ${BOARD[1]} -ne 2 && ${BOARD[2]} -ne 3 && ${BOARD[3]} -ne 4 && ${BOARD[4]} -ne 5 && ${BOARD[5]} -ne 6 && ${BOARD[6]} -ne 7 && ${BOARD[7]} -ne 8 && ${BOARD[8]} -ne 9 ]]; 
 	then
-		return 0;
+		return 0; #if board is full
 	else
-		return -1;
+		return -1; #if winning combinations not found
 	fi
 }
 
@@ -138,7 +143,7 @@ function blockUser()
 	elif [[ ${BOARD[2]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]]; 
 	then
 		BOARD[6]=$ComputerSymbol;
-	elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[2]} == $playerSymbol ]]; 
+	elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[2]} == $playerSymbol ]]; #selecting Centers starts here..
 	then
 		BOARD[1]=$ComputerSymbol;
 	elif [[ ${BOARD[3]} == $playerSymbol && ${BOARD[5]} == $playerSymbol ]]; 
@@ -163,13 +168,13 @@ function blockUser()
 	then
 		BOARD[4]=$ComputerSymbol;
 	else
-		makeFirstMove
+		makeFirstMove  #if there is no corners and no centers found then calls this function
 	fi
 }
 
 function playTurn()
 {
-	if [[ $1 -eq 1 ]];
+	if [[ $1 -eq 1 ]]; #player's Turn
 	then
 		echo "Your Turn";
 
@@ -209,11 +214,11 @@ function playTurn()
 
 		fi
 		checkWin
-		i=($?);
+		i=($?); #calling to check is won or not
 		PLAYER=$((PLAYER+1));
 
 
-	elif [[ $1 -eq 2 ]]; 
+	elif [[ $1 -eq 2 ]]; #computer's Turn
 	then
 		turnCount=$((turnCount+1));
 		echo "Computer's Turn";
@@ -225,7 +230,7 @@ function playTurn()
 			makeFirstMove
 		fi
 		
-		checkWin
+		checkWin #calling to check is won or not
 		i=($?);
 		PLAYER=$((PLAYER+1));
 	fi
@@ -246,7 +251,8 @@ function play()
 		printBoard ${BOARD[@]};
 		# break;
 	done
-	if [[ $i -eq 1 ]]; 
+
+	if [[ $i -eq 1 ]]; #if checkWin function returns 1
 	then
 		printBoard ${BOARD[@]};
 		if [[ $PLAYER -eq 2 ]]; 
@@ -260,6 +266,8 @@ function play()
 		echo "OOPS Game Draw";
 	fi
 }
+
+#Game Starts With the Toss
 
 TOSS=$((RANDOM%2));
 OPTION=0;
