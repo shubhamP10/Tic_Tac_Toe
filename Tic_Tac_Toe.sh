@@ -9,7 +9,7 @@ SYMBOL2='O';
 
 # VARIABLES
 turnCount=0;
-i=255;
+i=2;
 choice=0;
 #ARRAY
 declare -a BOARD;
@@ -59,11 +59,11 @@ function checkWin()
 	elif [[ ${BOARD[2]} == ${BOARD[4]} && ${BOARD[4]} == ${BOARD[6]} ]]; 
 	then
 		return 1;
-	elif [[ ${BOARD[0]} -ne 1 && ${BOARD[1]} -ne 2 && ${BOARD[2]} -ne 3 && ${BOARD[3]} -ne 4 && ${BOARD[4]} -ne 5 && ${BOARD[5]} -ne 6 && ${BOARD[6]} -ne 7 && ${BOARD[7]} -ne 8 && ${BOARD[8]} -ne 9 ]]; 
+	elif [[ ${BOARD[0]} != 1 && ${BOARD[1]} != 2 && ${BOARD[2]} != 3 && ${BOARD[3]} != 4 && ${BOARD[4]} != 5 && ${BOARD[5]} != 6 && ${BOARD[6]} != 7 && ${BOARD[7]} != 8 && ${BOARD[8]} != 9 ]]; 
 	then
 		return 0; #if board is full
 	else
-		return -1; #if winning combinations not found
+		return 2; #if winning combinations not found
 	fi
 }
 
@@ -72,132 +72,144 @@ function makeFirstMove()
 {
 	cchoice=$(((RANDOM%9)+1));
 	local placed=0;
-	while [[ $placed -eq 0 ]]; 
-			do
-				if [[ $cchoice -eq 1 && ${BOARD[0]} -eq 1 ]]; 
-				then
-					BOARD[0]=$ComputerSymbol;
-					placed=1;
-				elif [[ $cchoice -eq 2 && ${BOARD[1]} -eq 2 ]]; 
-				then
-					BOARD[1]=$ComputerSymbol;
-					placed=1;
-				elif [[ $cchoice -eq 3 && ${BOARD[2]} -eq 3 ]]; 
-				then
-					BOARD[2]=$ComputerSymbol;
-					placed=1;
-				elif [[ $cchoice -eq 4 && ${BOARD[3]} -eq 4 ]]; 
-				then
-					BOARD[3]=$ComputerSymbol;
-					placed=1;
-				elif [[ $cchoice -eq 5 && ${BOARD[4]} -eq 5 ]]; 
-				then
-					BOARD[4]=$ComputerSymbol;
-					placed=1;
-				elif [[ $cchoice -eq 6 && ${BOARD[5]} -eq 6 ]]; 
-				then
-					BOARD[5]=$ComputerSymbol;
-					placed=1;
-				elif [[ $cchoice -eq 7 && ${BOARD[6]} -eq 7 ]]; 
-				then
-					BOARD[6]=$ComputerSymbol;
-					placed=1;
-				elif [[ $cchoice -eq 8 && ${BOARD[7]} -eq 8 ]]; 
-				then
-					BOARD[7]=$ComputerSymbol;
-					placed=1;
-				elif [[ $cchoice -eq 9 && ${BOARD[8]} -eq 9 ]]; 
-				then
-					BOARD[8]=$ComputerSymbol;
-					placed=1;
-				else
-					cchoice=$(((RANDOM%9)+1));
-				fi
-			done
+	while [[ $placed == 0 ]]; 
+	do
+		if [[ $cchoice == 1 && ${BOARD[0]} == 1 ]]; 
+		then
+			BOARD[0]=$ComputerSymbol;
+			placed=1;
+		elif [[ $cchoice == 3 && ${BOARD[2]} == 3 ]]; 
+		then
+			BOARD[2]=$ComputerSymbol;
+			placed=1;
+		elif [[ $cchoice == 7 && ${BOARD[6]} == 7 ]]; 
+		then
+			BOARD[6]=$ComputerSymbol;
+			placed=1;
+		elif [[ $cchoice == 9 && ${BOARD[8]} == 9 ]]; 
+		then
+			BOARD[8]=$ComputerSymbol;
+			placed=1;
+		else
+			cchoice=$(((RANDOM%9)+1));
+		fi
+	done
+}
+
+function makeCenterMove()
+{
+	cchoice=$(((RANDOM%9)+1));
+	local placed=0;
+	while [[ $placed == 0 ]]; 
+	do
+		if [[ $cchoice == 2 && ${BOARD[1]} == 2 ]]; 
+		then
+			BOARD[1]=$ComputerSymbol;
+			placed=1;
+		elif [[ $cchoice == 4 && ${BOARD[3]} == 4 ]]; 
+		then
+			BOARD[3]=$ComputerSymbol;
+			placed=1;
+		elif [[ $cchoice == 5 && ${BOARD[4]} == 5 ]]; 
+		then
+			BOARD[4]=$ComputerSymbol;
+			placed=1;
+		elif [[ $cchoice == 6 && ${BOARD[5]} == 6 ]]; 
+		then
+			BOARD[5]=$ComputerSymbol;
+			placed=1;
+		elif [[ $cchoice == 8 && ${BOARD[7]} == 8 ]]; 
+		then
+			BOARD[7]=$ComputerSymbol;
+			placed=1;
+		else
+			cchoice=$(((RANDOM%9)+1));
+		fi
+	done
 }
 
 #Computer Will Play Winning move
 playWinningMove()
 {
-	if [[ ${BOARD[0]} == $ComputerSymbol && ${BOARD[1]} == $ComputerSymbol ]]; #if user marked 1 and 2    
-	then																   																	   #then 3rd cell will blocked   
-		BOARD[2]=$ComputerSymbol;
+	if [[ ${BOARD[1]} == $ComputerSymbol && ${BOARD[2]} == $ComputerSymbol || ${BOARD[3]} == $ComputerSymbol && ${BOARD[6]} == $ComputerSymbol || ${BOARD[4]} == $ComputerSymbol && ${BOARD[8]} == $ComputerSymbol ]];    
+	then	
+		if [[ ${BOARD[0]} == $playerSymbol ]]; 
+		then
+			return 0;
+		fi															   																    																   																    
+		BOARD[0]=$ComputerSymbol;
 		return 1;
-	elif [[ ${BOARD[3]} == $ComputerSymbol && ${BOARD[4]} == $ComputerSymbol ]]; 
+	elif [[ ${BOARD[0]} == $ComputerSymbol && ${BOARD[2]} == $ComputerSymbol || ${BOARD[7]} == $ComputerSymbol && ${BOARD[4]} == $ComputerSymbol ]];
 	then
-		BOARD[5]=$ComputerSymbol;
-		return 1;
-	elif [[ ${BOARD[6]} == $ComputerSymbol && ${BOARD[7]} == $ComputerSymbol ]]; 
-	then
-		BOARD[8]=$ComputerSymbol;
-		return 1;
-	elif [[ ${BOARD[0]} == $ComputerSymbol && ${BOARD[3]} == $ComputerSymbol ]]; 
-	then
-		BOARD[6]=$ComputerSymbol;
-		return 1;
-	elif [[ ${BOARD[1]} == $ComputerSymbol && ${BOARD[4]} == $ComputerSymbol ]]; 
-	then
-		BOARD[7]=$ComputerSymbol;
-		return 1;
-	elif [[ ${BOARD[2]} == $ComputerSymbol && ${BOARD[5]} == $ComputerSymbol ]]; 
-	then
-		BOARD[8]=$ComputerSymbol;
-		return 1;
-	elif [[ ${BOARD[0]} == $ComputerSymbol && ${BOARD[4]} == $ComputerSymbol ]]; 
-	then
-		BOARD[8]=$ComputerSymbol;
-		return 1;
-	elif [[ ${BOARD[2]} == $ComputerSymbol && ${BOARD[4]} == $ComputerSymbol ]]; 
-	then
-		BOARD[6]=$ComputerSymbol;
-		return 1;
-	elif [[ ${BOARD[0]} == $ComputerSymbol && ${BOARD[2]} == $ComputerSymbol ]]; #selecting Centers starts here..
-	then
+		if [[ ${BOARD[1]} == $playerSymbol ]]; 
+		then
+			return 0;
+		fi															   																    	
+			
 		BOARD[1]=$ComputerSymbol;
 		return 1;
-	elif [[ ${BOARD[3]} == $ComputerSymbol && ${BOARD[5]} == $ComputerSymbol ]]; 
+	elif [[ ${BOARD[0]} == $ComputerSymbol && ${BOARD[1]} == $ComputerSymbol || ${BOARD[5]} == $ComputerSymbol && ${BOARD[8]} == $ComputerSymbol || ${BOARD[6]} == $ComputerSymbol && ${BOARD[4]} == $ComputerSymbol ]];    
 	then
-		BOARD[4]=$ComputerSymbol;
+		if [[ ${BOARD[2]} == $playerSymbol ]]; 
+		then
+			return 0;
+		fi															   																    	
+																			   																    
+		BOARD[2]=$ComputerSymbol;
 		return 1;
-	elif [[ ${BOARD[6]} == $ComputerSymbol && ${BOARD[8]} == $ComputerSymbol ]]; 
+	elif [[ ${BOARD[0]} == $ComputerSymbol && ${BOARD[6]} == $ComputerSymbol || ${BOARD[4]} == $ComputerSymbol && ${BOARD[5]} == $ComputerSymbol ]]; 
 	then
-		BOARD[7]=$ComputerSymbol;
-		return 1;
-	elif [[ ${BOARD[0]} == $ComputerSymbol && ${BOARD[3]} == $ComputerSymbol ]]; 
-	then
-		BOARD[6]=$ComputerSymbol;
-		return 1;
-	elif [[ ${BOARD[0]} == $ComputerSymbol && ${BOARD[6]} == $ComputerSymbol ]]; 
-	then
+		if [[ ${BOARD[3]} == $playerSymbol ]]; 
+		then
+			return 0;
+		fi															   																    	
+			
 		BOARD[3]=$ComputerSymbol;
 		return 1;
-	elif [[ ${BOARD[1]} == $ComputerSymbol && ${BOARD[7]} == $ComputerSymbol ]]; 
+	elif [[ ${BOARD[3]} == $ComputerSymbol && ${BOARD[5]} == $ComputerSymbol || ${BOARD[1]} == $ComputerSymbol && ${BOARD[7]} == $ComputerSymbol || ${BOARD[0]} == $ComputerSymbol && ${BOARD[8]} == $ComputerSymbol || ${BOARD[2]} == $ComputerSymbol && ${BOARD[6]} == $ComputerSymbol ]]; 
 	then
+		if [[ ${BOARD[4]} == $playerSymbol ]]; 
+		then
+			return 0;
+		fi															   																    	
+			
 		BOARD[4]=$ComputerSymbol;
 		return 1;
-	elif [[ ${BOARD[0]} == $ComputerSymbol && ${BOARD[4]} == $ComputerSymbol ]]; 
+	elif [[ ${BOARD[3]} == $ComputerSymbol && ${BOARD[4]} == $ComputerSymbol || ${BOARD[2]} == $ComputerSymbol && ${BOARD[2]} == $ComputerSymbol ]]; 
 	then
-		BOARD[8]=$ComputerSymbol;
-		return 1;
-	elif [[ ${BOARD[2]} == $ComputerSymbol && ${BOARD[8]} == $ComputerSymbol ]]; 
-	then
+		if [[ ${BOARD[5]} == $playerSymbol ]]; 
+		then
+			return 0;
+		fi															   																    	
+			
 		BOARD[5]=$ComputerSymbol;
 		return 1;
-	elif [[ ${BOARD[0]} == $ComputerSymbol && ${BOARD[8]} == $ComputerSymbol ]]; 
+	elif [[ ${BOARD[0]} == $ComputerSymbol && ${BOARD[3]} == $ComputerSymbol || ${BOARD[2]} == $ComputerSymbol && ${BOARD[4]} == $ComputerSymbol || ${BOARD[7]} == $ComputerSymbol && ${BOARD[8]} == $ComputerSymbol || ${BOARD[4]} == $ComputerSymbol && ${BOARD[2]} == $ComputerSymbol ]]; 
 	then
-		BOARD[4]=$ComputerSymbol;
+		if [[ ${BOARD[6]} == $playerSymbol ]]; 
+		then
+			return 0;
+		fi															   																    	
+			
+		BOARD[6]=$ComputerSymbol;
 		return 1;
-	elif [[ ${BOARD[2]} == $ComputerSymbol && ${BOARD[6]} == $ComputerSymbol ]]; 
+	elif [[ ${BOARD[1]} == $ComputerSymbol && ${BOARD[4]} == $ComputerSymbol || ${BOARD[6]} == $ComputerSymbol && ${BOARD[8]} == $ComputerSymbol ]]; 
 	then
-		BOARD[4]=$ComputerSymbol;
+		if [[ ${BOARD[7]} == $playerSymbol ]]; 
+		then
+			return 0;
+		fi															   																    	
+			
+		BOARD[7]=$ComputerSymbol;
 		return 1;
-	elif [[ ${BOARD[0]} == $ComputerSymbol && ${BOARD[4]} == $ComputerSymbol ]]; 
+	elif [[ ${BOARD[2]} == $ComputerSymbol && ${BOARD[5]} == $ComputerSymbol || ${BOARD[0]} == $ComputerSymbol && ${BOARD[4]} == $ComputerSymbol || ${BOARD[6]} == $ComputerSymbol && ${BOARD[7]} == $ComputerSymbol ]]; 
 	then
+		if [[ ${BOARD[8]} == $playerSymbol ]]; 
+		then
+			return 0;
+		fi															   																    	
+			
 		BOARD[8]=$ComputerSymbol;
-		return 1;
-	elif [[ ${BOARD[2]} == $ComputerSymbol && ${BOARD[1]} == $ComputerSymbol ]]; 
-	then
-		BOARD[0]=$ComputerSymbol;
 		return 1;
 	else
 		return 0;
@@ -208,80 +220,138 @@ playWinningMove()
 function blockUser()
 {
 	local placed=0;
-	playWinningMove
+	if [[ $turnCount > 2 ]]; then
+		playWinningMove
+	fi
+	
 	placed=($?);
 	if [[ $placed == 1 ]]; then
 		return
-	else
-		if [[ ${BOARD[0]} == $playerSymbol && ${BOARD[1]} == $playerSymbol ]]; #if user marked 1 and 2    
-		then																   																	   #then 3rd cell will blocked   
-			BOARD[2]=$ComputerSymbol;
-		elif [[ ${BOARD[3]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]]; 
+	elif [[ $placed == 0 ]]; then
+		if [[ ${BOARD[2]} == $playerSymbol && ${BOARD[1]} == $playerSymbol || ${BOARD[6]} == $playerSymbol && ${BOARD[3]} == $playerSymbol || ${BOARD[8]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]];    
 		then
-			BOARD[5]=$ComputerSymbol;
-		elif [[ ${BOARD[6]} == $playerSymbol && ${BOARD[7]} == $playerSymbol ]]; 
-		then
-			BOARD[8]=$ComputerSymbol;
-		elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[3]} == $playerSymbol ]]; 
-		then
-			BOARD[6]=$ComputerSymbol;
-		elif [[ ${BOARD[1]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]]; 
-		then
-			BOARD[7]=$ComputerSymbol;
-		elif [[ ${BOARD[2]} == $playerSymbol && ${BOARD[5]} == $playerSymbol ]]; 
-		then
-			BOARD[8]=$ComputerSymbol;
-		elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]]; 
-		then
-			BOARD[8]=$ComputerSymbol;
-		elif [[ ${BOARD[2]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]]; 
-		then
-			BOARD[6]=$ComputerSymbol;
-		elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[2]} == $playerSymbol ]]; #selecting Centers starts here..
-		then
-			BOARD[1]=$ComputerSymbol;
-		elif [[ ${BOARD[3]} == $playerSymbol && ${BOARD[5]} == $playerSymbol ]]; 
-		then
-			BOARD[4]=$ComputerSymbol;
-		elif [[ ${BOARD[6]} == $playerSymbol && ${BOARD[8]} == $playerSymbol ]]; 
-		then
-			BOARD[7]=$ComputerSymbol;
-		elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[3]} == $playerSymbol ]]; 
-		then
-			BOARD[6]=$ComputerSymbol;
-		elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[6]} == $playerSymbol ]]; 
-		then
-			BOARD[3]=$ComputerSymbol;
-		elif [[ ${BOARD[1]} == $playerSymbol && ${BOARD[7]} == $playerSymbol ]]; 
-		then
-			BOARD[4]=$ComputerSymbol;
-		elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]]; 
-		then
-			BOARD[8]=$ComputerSymbol;
-		elif [[ ${BOARD[2]} == $playerSymbol && ${BOARD[8]} == $playerSymbol ]]; 
-		then
-			BOARD[5]=$ComputerSymbol;
-		elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[8]} == $playerSymbol ]]; 
-		then
-			BOARD[4]=$ComputerSymbol;
-		elif [[ ${BOARD[2]} == $playerSymbol && ${BOARD[6]} == $playerSymbol ]]; 
-		then
-			BOARD[4]=$ComputerSymbol;
-		elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]]; 
-		then
-			BOARD[8]=$ComputerSymbol;
-		elif [[ ${BOARD[1]} == $playerSymbol && ${BOARD[2]} == $playerSymbol ]]; 
-		then
+			if [[ ${BOARD[0]} == $computerSymbol ]]; 
+			then
+				if [[ ${BOARD[0]} == 1 || ${BOARD[2]} == 3 || ${BOARD[6]} == 7 || ${BOARD[8]} == 9 ]]; 
+					then
+					makeFirstMove	#if there corner is available
+					else
+					makeCenterMove	#if there is no corners available														   																    	
+				fi																   																    	
+			fi															   																    
 			BOARD[0]=$ComputerSymbol;
+		elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[2]} == $playerSymbol || ${BOARD[7]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]]; #selecting Centers starts here..
+		then
+			if [[ ${BOARD[1]} == $computerSymbol ]]; 
+			then
+				if [[ ${BOARD[0]} == 1 || ${BOARD[2]} == 3 || ${BOARD[6]} == 7 || ${BOARD[8]} == 9 ]]; 
+					then
+					makeFirstMove	#if there corner is available
+					else
+					makeCenterMove	#if there is no corners available														   																    	
+				fi																		   																    	
+			fi	
+			BOARD[1]=$ComputerSymbol;
+		elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[1]} == $playerSymbol || ${BOARD[8]} == $playerSymbol && ${BOARD[5]} == $playerSymbol || ${BOARD[6]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]];    
+		then
+			if [[ ${BOARD[2]} == $computerSymbol ]]; 
+			then
+				if [[ ${BOARD[0]} == 1 || ${BOARD[2]} == 3 || ${BOARD[6]} == 7 || ${BOARD[8]} == 9 ]]; 
+					then
+					makeFirstMove	#if there corner is available
+					else
+					makeCenterMove	#if there is no corners available														   																    	
+				fi																	   																    	
+			fi	
+
+			BOARD[2]=$ComputerSymbol;
+		elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[6]} == $playerSymbol || ${BOARD[5]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]]; 
+		then
+			if [[ ${BOARD[3]} == $computerSymbol ]]; 
+			then
+				if [[ ${BOARD[0]} == 1 || ${BOARD[2]} == 3 || ${BOARD[6]} == 7 || ${BOARD[8]} == 9 ]]; 
+					then
+					makeFirstMove	#if there corner is available
+					else
+					makeCenterMove	#if there is no corners available														   																    	
+				fi																	   																    	
+			fi	
+			BOARD[3]=$ComputerSymbol;
+		elif [[ ${BOARD[3]} == $playerSymbol && ${BOARD[5]} == $playerSymbol || ${BOARD[1]} == $playerSymbol && ${BOARD[7]} == $playerSymbol || ${BOARD[0]} == $playerSymbol && ${BOARD[8]} == $playerSymbol || ${BOARD[2]} == $playerSymbol && ${BOARD[6]} == $playerSymbol ]]; 
+		then
+			if [[ ${BOARD[4]} == $computerSymbol ]]; 
+			then
+				if [[ ${BOARD[0]} == 1 || ${BOARD[2]} == 3 || ${BOARD[6]} == 7 || ${BOARD[8]} == 9 ]]; 
+					then
+					makeFirstMove	#if there corner is available
+					else
+					makeCenterMove	#if there is no corners available														   																    	
+				fi																		   																    	
+			fi	
+			BOARD[4]=$ComputerSymbol;
+		elif [[ ${BOARD[3]} == $playerSymbol && ${BOARD[4]} == $playerSymbol || ${BOARD[2]} == $playerSymbol && ${BOARD[8]} == $playerSymbol ]]; 
+		then
+			if [[ ${BOARD[5]} == $computerSymbol ]]; 
+			then
+				if [[ ${BOARD[0]} == 1 || ${BOARD[2]} == 3 || ${BOARD[6]} == 7 || ${BOARD[8]} == 9 ]]; 
+					then
+					makeFirstMove	#if there corner is available
+					else
+					makeCenterMove	#if there is no corners available														   																    	
+				fi																	   																    	
+			fi	
+			BOARD[5]=$ComputerSymbol;
+		elif [[ ${BOARD[0]} == $playerSymbol && ${BOARD[3]} == $playerSymbol || ${BOARD[2]} == $playerSymbol && ${BOARD[4]} == $playerSymbol || ${BOARD[8]} == $playerSymbol && ${BOARD[7]} == $playerSymbol || ${BOARD[2]} == $playerSymbol && ${BOARD[4]} == $playerSymbol ]]; 
+		then
+			if [[ ${BOARD[6]} == $computerSymbol ]]; 
+			then
+				if [[ ${BOARD[0]} == 1 || ${BOARD[2]} == 3 || ${BOARD[6]} == 7 || ${BOARD[8]} == 9 ]]; 
+					then
+					makeFirstMove	#if there corner is available
+					else
+					makeCenterMove	#if there is no corners available														   																    	
+				fi																		   																    	
+			fi	
+			BOARD[6]=$ComputerSymbol;
+		elif [[ ${BOARD[1]} == $playerSymbol && ${BOARD[4]} == $playerSymbol || ${BOARD[6]} == $playerSymbol && ${BOARD[8]} == $playerSymbol ]]; 
+		then
+			if [[ ${BOARD[7]} == $computerSymbol ]]; 
+			then
+				if [[ ${BOARD[0]} == 1 || ${BOARD[2]} == 3 || ${BOARD[6]} == 7 || ${BOARD[8]} == 9 ]]; 
+					then
+					makeFirstMove	#if there corner is available
+					else
+					makeCenterMove	#if there is no corners available														   																    	
+				fi																	   																    	
+			fi	
+			BOARD[7]=$ComputerSymbol;
+		elif [[ ${BOARD[2]} == $playerSymbol && ${BOARD[5]} == $playerSymbol || ${BOARD[0]} == $playerSymbol && ${BOARD[4]} == $playerSymbol || ${BOARD[6]} == $playerSymbol && ${BOARD[7]} == $playerSymbol ]]; 
+		then
+			if [[ ${BOARD[8]} == $computerSymbol ]]; 
+			then
+				if [[ ${BOARD[0]} == 1 || ${BOARD[2]} == 3 || ${BOARD[6]} == 7 || ${BOARD[8]} == 9 ]]; 
+					then
+					makeFirstMove	#if there corner is available
+					else
+					makeCenterMove	#if there is no corners available														   																    	
+				fi																	   																    	
+			fi	
+			BOARD[8]=$ComputerSymbol;
 		else
-			makeFirstMove  #if there is no corners and no centers found then calls this function
+			if [[ ${BOARD[0]} == 1 || ${BOARD[2]} == 3 || ${BOARD[6]} == 7 || ${BOARD[8]} == 9 ]]; 
+			then
+				makeFirstMove	#if there corner is available
+			else
+				makeCenterMove	#if there is no corners available														   																    	
+			fi	
+			  
 		fi
 	fi
 }
 
 function playTurn()
 {
-	if [[ $1 -eq 1 ]]; #player's Turn
+	if [[ $1 == 1 ]]; #player's Turn
 	then
 		echo "Your Turn";
 
@@ -325,12 +395,12 @@ function playTurn()
 		PLAYER=$((PLAYER+1));
 
 
-	elif [[ $1 -eq 2 ]]; #computer's Turn
+	elif [[ $1 == 2 ]]; #computer's Turn
 	then
 		turnCount=$((turnCount+1));
 		echo "Computer's Turn";
 		
-		if [[ $turnCount == 2 || $turnCount == 3 || $turnCount == 4 || $turnCount == 5 || $turnCount == 6 ]]; #in 2nd or 3rd or 4th turn Computer will call blockuser function 
+		if [[ $turnCount > 1 ]]; 
 		then
 			blockUser
 		else
@@ -345,10 +415,10 @@ function playTurn()
 
 function play()
 {
-	while [[ $i -eq 255 ]]; 
+	while [[ $i == 2 ]]; 
 	do
 		# printBoard ${BOARD[@]};
-		if [[ $((PLAYER%2)) -eq 1 ]];
+		if [[ $((PLAYER%2)) == 1 ]];
 		then
 			PLAYER=1;
 		else
@@ -359,10 +429,10 @@ function play()
 		# break;
 	done
 
-	if [[ $i -eq 1 ]]; #if checkWin function returns 1
+	if [[ $i == 1 ]]; #if checkWin function returns 1
 	then
 		printBoard ${BOARD[@]};
-		if [[ $PLAYER -eq 2 ]]; 
+		if [[ $PLAYER == 2 ]]; 
 		then
 			echo "Congrats!!!! You Won the Game";
 
@@ -386,11 +456,11 @@ case $TOSS in
 		echo "You Won the Toss !!! ";
 		echo "Choose Your Symbol..";
 		read -p "press 1 for O, 2 for X." OPTION
-		if [[ $OPTION -eq 1 ]]; 
+		if [[ $OPTION == 1 ]]; 
 		then
 			playerSymbol=$SYMBOL2;
 			ComputerSymbol=$SYMBOL1;
-		elif [[ $OPTION -eq 2 ]]; 
+		elif [[ $OPTION == 2 ]]; 
 		then
 			playerSymbol=$SYMBOL1;
 			ComputerSymbol=$SYMBOL2;
@@ -402,11 +472,11 @@ case $TOSS in
 	1 )
 		echo "Computer Won the Toss !!!";
 		OPTION=$(((RANDOM%2)+1));
-		if [[ $OPTION -eq 1 ]]; 
+		if [[ $OPTION == 1 ]]; 
 		then
 			ComputerSymbol=$SYMBOL2;
 			playerSymbol=$SYMBOL1;
-		elif [[ $OPTION -eq 2 ]]; 
+		elif [[ $OPTION == 2 ]]; 
 		then
 			ComputerSymbol=$SYMBOL1;
 			playerSymbol=$SYMBOL2;
