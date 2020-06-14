@@ -1,4 +1,5 @@
-#! /bin/bash -x
+#! /bin/bash
+
 echo "Welcome To Tic Tac Toe Simulation";
 echo "";
 
@@ -11,6 +12,7 @@ SYMBOL2='O';
 turnCount=0;
 i=2;
 choice=0;
+
 #ARRAY
 declare -a BOARD;
 BOARD=(1 2 3 4 5 6 7 8 9); 
@@ -31,32 +33,32 @@ function printBoard()
 
 #this function will check for all winning Combinations
 # returns 1 if true
-# returns -1 if false
+# returns 2 if false
 # returns 0 if board is Full
 function checkWin()
 {
-	if [[ ${BOARD[0]} == ${BOARD[1]} && ${BOARD[1]} == ${BOARD[2]} ]]; 
+	if [[ ${BOARD[0]} == ${BOARD[1]} && ${BOARD[1]} == ${BOARD[2]} ]]; #if position 1=2=3
 	then
 		return 1;
-	elif [[ ${BOARD[3]} == ${BOARD[4]} && ${BOARD[4]} == ${BOARD[5]} ]]; 
+	elif [[ ${BOARD[3]} == ${BOARD[4]} && ${BOARD[4]} == ${BOARD[5]} ]]; #if position 4=5=6
 	then
 		return 1;
-	elif [[ ${BOARD[6]} == ${BOARD[7]} && ${BOARD[7]} == ${BOARD[8]} ]]; 
+	elif [[ ${BOARD[6]} == ${BOARD[7]} && ${BOARD[7]} == ${BOARD[8]} ]]; #if position 7=8=9
 	then
 		return 1;
-	elif [[ ${BOARD[0]} == ${BOARD[3]} && ${BOARD[3]} == ${BOARD[6]} ]]; 
+	elif [[ ${BOARD[0]} == ${BOARD[3]} && ${BOARD[3]} == ${BOARD[6]} ]]; #if position 1=4=7
 	then
 		return 1;
-	elif [[ ${BOARD[1]} == ${BOARD[4]} && ${BOARD[4]} == ${BOARD[7]} ]]; 
+	elif [[ ${BOARD[1]} == ${BOARD[4]} && ${BOARD[4]} == ${BOARD[7]} ]]; #if position 2=5=8
 	then
 		return 1;
-	elif [[ ${BOARD[2]} == ${BOARD[5]} && ${BOARD[5]} == ${BOARD[8]} ]]; 
+	elif [[ ${BOARD[2]} == ${BOARD[5]} && ${BOARD[5]} == ${BOARD[8]} ]]; #if position 3=6=9
 	then
 		return 1;
-	elif [[ ${BOARD[0]} == ${BOARD[4]} && ${BOARD[4]} == ${BOARD[8]} ]]; 
+	elif [[ ${BOARD[0]} == ${BOARD[4]} && ${BOARD[4]} == ${BOARD[8]} ]]; #if position 1=5=9
 	then
 		return 1;
-	elif [[ ${BOARD[2]} == ${BOARD[4]} && ${BOARD[4]} == ${BOARD[6]} ]]; 
+	elif [[ ${BOARD[2]} == ${BOARD[4]} && ${BOARD[4]} == ${BOARD[6]} ]]; #if position 3=5=7
 	then
 		return 1;
 	elif [[ ${BOARD[0]} != 1 && ${BOARD[1]} != 2 && ${BOARD[2]} != 3 && ${BOARD[3]} != 4 && ${BOARD[4]} != 5 && ${BOARD[5]} != 6 && ${BOARD[6]} != 7 && ${BOARD[7]} != 8 && ${BOARD[8]} != 9 ]]; 
@@ -67,7 +69,7 @@ function checkWin()
 	fi
 }
 
-#Computer Will Make First Move
+#Computer Will Make First Move at the corners
 function makeFirstMove()
 {
 	cchoice=$(((RANDOM%9)+1));
@@ -96,6 +98,7 @@ function makeFirstMove()
 	done
 }
 
+#Computer will make center Move if corners are not found
 function makeCenterMove()
 {
 	cchoice=$(((RANDOM%9)+1));
@@ -128,7 +131,11 @@ function makeCenterMove()
 	done
 }
 
-#Computer Will Play Winning move
+#Computer Will Play Winning move by checking the combinations 
+# if true
+# 	returns 1
+# if false
+#	returns 0
 playWinningMove()
 {
 	if [[ ${BOARD[1]} == $ComputerSymbol && ${BOARD[2]} == $ComputerSymbol || ${BOARD[3]} == $ComputerSymbol && ${BOARD[6]} == $ComputerSymbol || ${BOARD[4]} == $ComputerSymbol && ${BOARD[8]} == $ComputerSymbol ]];    
@@ -216,15 +223,16 @@ playWinningMove()
 	fi
 }
 
-#Computer Will Block the user
+#Computer Will Block the user after checking for winning move
 function blockUser()
 {
 	local placed=0;
 	if [[ $turnCount > 2 ]]; then
-		playWinningMove
+		playWinningMove 
+		placed=($?); #recieves 0 if not won else 1 if won
 	fi
 	
-	placed=($?);
+	#if won exit from the function
 	if [[ $placed == 1 ]]; then
 		return
 	elif [[ $placed == 0 ]]; then
@@ -349,15 +357,16 @@ function blockUser()
 	fi
 }
 
+#this function will plays the game for both user and computer based on the player's turn
 function playTurn()
 {
 	if [[ $1 == 1 ]]; #player's Turn
 	then
 		echo "Your Turn";
 
-		echo "Your Symbol is :"$playerSymbol;
+		echo "Your Symbol is :"$playerSymbol; #displaying player's symbol
 
-		read -p "Enter Cell Number to Mark yor Symbol: " choice;
+		read -p "Enter Cell Number to Mark yor Symbol: " choice; #getting user's choice to mark on board
 		if [[ $choice == 1 && ${BOARD[0]} == 1 ]]; 
 		then
 			BOARD[0]=$playerSymbol;
@@ -390,14 +399,14 @@ function playTurn()
 			PLAYER=$((PLAYER-1));
 
 		fi
-		checkWin
-		i=($?); #calling to check is won or not
+		checkWin #calling to check if won or not
+		i=($?); #recieves 1 if won, 2 if not won, 0 if board is full
 		PLAYER=$((PLAYER+1));
 
 
 	elif [[ $1 == 2 ]]; #computer's Turn
 	then
-		turnCount=$((turnCount+1));
+		turnCount=$((turnCount+1)); 
 		echo "Computer's Turn";
 		
 		if [[ $turnCount > 1 ]]; 
@@ -408,16 +417,16 @@ function playTurn()
 		fi
 		
 		checkWin #calling to check is won or not
-		i=($?);
+		i=($?); #recieves 1 if won, 2 if not won, 0 if board is full
 		PLAYER=$((PLAYER+1));
 	fi
 }
 
+#this function will plays the game and decides WIN, LOST and TIE
 function play()
 {
 	while [[ $i == 2 ]]; 
 	do
-		# printBoard ${BOARD[@]};
 		if [[ $((PLAYER%2)) == 1 ]];
 		then
 			PLAYER=1;
@@ -426,10 +435,10 @@ function play()
 		fi
 		playTurn $PLAYER;
 		printBoard ${BOARD[@]};
-		# break;
 	done
 
-	if [[ $i == 1 ]]; #if checkWin function returns 1
+	#if checkWin function returns 1
+	if [[ $i == 1 ]]; 
 	then
 		printBoard ${BOARD[@]};
 		if [[ $PLAYER == 2 ]]; 
@@ -444,8 +453,10 @@ function play()
 	fi
 }
 
-# ************* MAIN PART *******************
-#Game Starts With the Toss
+# ************* MAIN PART *******************#
+		#Game Starts With the Toss#
+		 #Decides Who Plays First#
+		 #Prins the Initial Board#
 
 TOSS=$((RANDOM%2));
 OPTION=0;
